@@ -3,33 +3,33 @@
     <!-- 头部组件 -->
     <searchLink />
     <!-- 页面主体 -->
-    <div class="showMain">
+    <div class="showMain" v-if="goriesList.length">
       <!-- 左边导航栏 -->
       <ul class="left">
         <li
           @click="activeIndex=index"
           :class="{active:activeIndex===index}"
-          v-for="(item,index) in 10"
+          v-for="(item,index) in goriesList"
           :key="index"
-        >大家电</li>
+        >{{item.cat_name}}</li>
       </ul>
       <!-- 右边商品 -->
       <ul class="right">
         <img src="../../../static/tabs/icons/titleImage.png" alt />
-        <li>
-          <p class="pName">
+        <li v-for="(item,index) in goriesList[activeIndex].children" :key="index">
+          <p class="pName" v-if="item.length">
             /
-            <span>电视</span>
+            <span>{{item.cat_name}}</span>
             /
           </p>
           <ul class="showItem">
-            <li v-for="(item,index) in 10" :key="index">
-              <img
-                class="imgBox"
-                src="https://img10.360buyimg.com/babel/s190x240_jfs/t1/103208/40/3631/41248/5de0e402E7dcbf45f/d7e352620534bec7.png!cc_190x240.webp"
-                alt
-              />
-              <span>曲面电视</span>
+            <li
+              v-for="(cate,cateIndex) in item.children"
+              @click="getSearchList(cate.cat_name)"
+              :key="cateIndex"
+            >
+              <img class="imgBox" :src="cate.cat_icon" alt />
+              <span>{{cate.cat_name}}</span>
             </li>
           </ul>
         </li>
@@ -44,11 +44,28 @@ export default {
   data () {
     return {
       // 默认选中的左边
-      activeIndex: 0
+      activeIndex: 0,
+      goriesList: []
     }
   },
   components: {
     searchLink
+  },
+  created () {
+    this.getCategories()
+  },
+  methods: {
+    getCategories () {
+      this.$request({
+        url: '/api/public/v1/categories'
+      }).then(data => {
+        // console.log(data)
+        this.goriesList = data
+      })
+    },
+    getSearchList (catname) {
+      wx.navigateTo({ url: '/pages/searchList/main?query=' + catname })
+    }
   }
 }
 </script>
@@ -57,6 +74,7 @@ export default {
 .showMain {
   display: flex;
   position: fixed;
+  align-items: center;
   top: 100rpx;
   bottom: 0;
   width: 100%;
@@ -90,6 +108,7 @@ export default {
   .right {
     flex: 1;
     height: 100%;
+    justify-content: center;
     overflow: auto;
     padding: 20rpx 16rpx 0 16rpx;
     img {
@@ -100,12 +119,11 @@ export default {
     .pName {
       height: 110rpx;
       color: #e0e0e0;
-      background-color: red;
       text-align: center;
       line-height: 110rpx;
-      font-size: 36rpx;
       span {
         color: #333;
+        text-align: center;
       }
     }
   }
@@ -117,6 +135,8 @@ export default {
   li {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 33.33%;
     margin-bottom: 30rpx;
     font-size: 28rpx;
@@ -125,6 +145,7 @@ export default {
       height: 120rpx;
     }
     span {
+      text-align: center;
     }
   }
 }

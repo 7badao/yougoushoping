@@ -84,7 +84,7 @@ export default {
       this.$request({
         url: '/api/public/v1/home/floordata'
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.Floordata = res
       })
     }
