@@ -1,12 +1,7 @@
 <template>
   <div>
     <!-- 头部搜索框 -->
-    <div class="header">
-      <div class="inputBox">
-        <icon type="search" size="20"></icon>
-        <span>搜索</span>
-      </div>
-    </div>
+    <searchLink />
     <!-- 轮播图 -->
     <swiper
       class="swiper"
@@ -46,7 +41,11 @@
 </template>
 
 <script>
+import searchLink from '@/components/searchLink'
 export default {
+  components: {
+    searchLink
+  },
   data () {
     return {
       // 轮播图数组
@@ -89,32 +88,12 @@ export default {
         this.Floordata = res
       })
     }
+    // 导入封装的头部组件
   }
 }
 </script>
 
 <style lang="less">
-.header {
-  height: 100rpx;
-  padding: 0 16rpx;
-  display: flex;
-  align-items: center;
-  background-color: #eb4450;
-  .inputBox {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    height: 60rpx;
-    color: #bbb;
-    background-color: #fff;
-    font-size: 34rpx;
-    icon {
-      margin-right: 16rpx;
-    }
-  }
-}
 .swiper {
   height: 340rpx;
   swiper-item {
