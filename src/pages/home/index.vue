@@ -16,31 +16,28 @@
       indicator-color="rgba(255, 255, 255, 0.3)"
       indicator-active-color="#fff"
     >
-      <block v-for="(item,index) in 3" :key="index">
+      <block v-for="(item,index) in swiperData" :key="index">
         <swiper-item>
-          <img mode="aspectFill" src="https://api.zbztb.cn/pyg/banner2.png" />
+          <img mode="aspectFill" :src="item.image_src" />
         </swiper-item>
       </block>
     </swiper>
     <!-- 分类栏 -->
     <div class="category">
-      <div class="cateBar" v-for="(item,index) in 4" :key="index">
-        <img src="https://api.zbztb.cn/pyg/icon_index_nav_4@2x.png" alt />
+      <div class="cateBar" v-for="(item,index) in Catitems" :key="index">
+        <img :src="item.image_src" alt />
       </div>
     </div>
     <!-- show -->
     <ul>
-      <li class="floor-item" v-for="(item, index) in 4" :key="index">
-        <img src="https://api.zbztb.cn/pyg/pic_floor01_title.png" alt />
+      <li class="floor-item" v-for="(item, index) in Floordata" :key="index">
+        <img :src="item.floor_title.image_src" alt />
         <div class="products">
-          <img src="https://api.zbztb.cn/pyg/pic_floor01_1@2x.png" alt />
+          <img :src="item.product_list[0].image_src" alt />
           <div class="right">
-            <img
-              v-for="(item2, index2) in 4"
-              :key="index2"
-              src="https://api.zbztb.cn/pyg/pic_floor01_1@2x.png"
-              alt
-            />
+            <block v-for="(floor,findex) in item.product_list" :key="findex">
+              <img v-if="findex" :src="floor.image_src" alt />
+            </block>
           </div>
         </div>
       </li>
@@ -49,7 +46,51 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      // 轮播图数组
+      swiperData: [],
+      // 分类
+      Catitems: [],
+      // 楼层
+      Floordata: []
+    }
+  },
+  created () {
+    this.getSwiperData()
+    this.getCatitems()
+    this.getFloordata()
+  },
+  methods: {
+    // 请求轮播图
+    getSwiperData () {
+      this.$request({
+        url: '/api/public/v1/home/swiperdata'
+      }).then(res => {
+        // console.log(res)
+        this.swiperData = res
+      })
+    },
+    // 请求分类
+    getCatitems () {
+      this.$request({
+        url: '/api/public/v1/home/catitems'
+      }).then(res => {
+        // console.log(res)
+        this.Catitems = res
+      })
+    },
+    getFloordata () {
+      this.$request({
+        url: '/api/public/v1/home/floordata'
+      }).then(res => {
+        console.log(res)
+        this.Floordata = res
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less">
