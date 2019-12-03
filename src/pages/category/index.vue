@@ -17,7 +17,7 @@
       <ul class="right">
         <img src="../../../static/tabs/icons/titleImage.png" alt />
         <li v-for="(item,index) in goriesList[activeIndex].children" :key="index">
-          <p class="pName" v-if="item.length">
+          <p class="pName" v-if="item.children.length">
             /
             <span>{{item.cat_name}}</span>
             /

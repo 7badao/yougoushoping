@@ -11,6 +11,7 @@ function request (options) {
   return new Promise((resolve, reject) => {
     wx.request({
       url: BASE_URL + options.url,
+      data: options.data,
       success: res => {
         resolve(res.data.message)
       },

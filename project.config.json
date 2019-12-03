@@ -49,9 +49,9 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "搜索",
+					"name": "pages/searchList/main",
 					"pathName": "pages/searchList/main",
-					"query": "",
+					"query": "query=小米",
 					"scene": null
 				}
 			]

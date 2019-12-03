@@ -1,0 +1,9 @@
+{
+  "navigationBarBackgroundColor": "#eb4450",
+  "navigationBarTextStyle": "white",
+  "navigationBarTitleText": "搜索列表",
+  "backgroundColor": "#eeeeee",
+  "backgroundTextStyle": "dark",
+  "onReachBottomDistance": 50,
+  "enablePullDownRefresh": true
+}

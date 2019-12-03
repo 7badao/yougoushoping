@@ -3,33 +3,106 @@
     <!-- 头部搜索框 -->
     <header>
       <icon type="search" size="24"></icon>
-      <input type="text" value="小米" />
+      <input type="text" v-model="query" @confirm="reload" confirm-type="search" />
     </header>
     <!-- 导航栏 -->
     <nav>
-      <div v-for="(item, index) in 3" :key="index">综合</div>
+      <div
+        :class="{active:artiveIndex===index}"
+        @click="artiveIndex=index"
+        v-for="(item, index) in menuList"
+        :key="index"
+      >{{item}}</div>
     </nav>
     <!-- 商品展示区域 -->
-    <div class="showBox" v-for="(item,index) in 6" :key="index">
+    <div class="showBox" v-for="(item,index) in goodsList" :key="index">
       <div class="left">
-        <img
-          src="https://img11.360buyimg.com/mobilecms/s140x140_jfs/t1/5021/24/11990/351090/5bd1b346E84b1accc/bda8ef36609d5ef7.jpg.webp"
-          alt
-        />
+        <img :src="item.goods_small_logo" alt />
       </div>
       <div class="right">
-        <div class="lineHiden">飞利浦（PHILIPS）男士电动剃须刀全身水洗干湿双剃剃胡刀胡须刀刮胡刀S1050/02</div>
+        <div class="lineHiden">{{item.goods_name}}</div>
         <span class="price">
           ￥
-          <span class="num">69</span>.00
+          <span class="num">{{item.goods_price}}</span>.00
         </span>
       </div>
     </div>
+    <div class="tipText" v-show="isGoodsList">我是有底线的</div>
   </div>
 </template>
 
 <script>
-export default {}
+const PAGE_SIZE = 6
+export default {
+  data () {
+    return {
+      // 排序数组
+      menuList: ['综合', '销量', '价格'],
+      // 搜索商品数组
+      goodsList: [],
+      // 搜索的关键字
+      query: '',
+      pagenum: 1,
+      // 选中字的下标
+      artiveIndex: 0,
+      // 设置一个标志位 判断是否是在请求中 默认不在
+      isRequest: false,
+      // 判断数据是否加载完毕
+      isGoodsList: false
+    }
+  },
+  // 页面加载时触发 获取页面的路径参数
+  onLoad (options) {
+    this.query = options.query
+    this.getSearch()
+    // console.log(options.query)
+  },
+  // 下拉刷新 加载第一页
+  onPullDownRefresh () {
+    this.reload()
+  },
+  // 上拉加载更多
+  onReachBottom () {
+    this.pagenum++
+    this.getSearch()
+  },
+  methods: {
+    reload () {
+      this.pagenum = 1
+      // 将数组里面的数据清空
+      this.goodsList = []
+      this.getSearch()
+    },
+    getSearch () {
+      // 如果是不在请求直接return
+      if (this.isRequest || this.isGoodsList) {
+        return
+      }
+      // 请求中
+      this.isRequest = true
+      this.$request({
+        url: '/api/public/v1/goods/search',
+        data: {
+          query: this.query,
+          pagesize: PAGE_SIZE,
+          pagenum: this.pagenum
+        }
+      }).then(data => {
+        console.log(data)
+        // 下拉出现问题 后面数据覆盖前面 所以不能直接赋值
+        // this.goodsList = data.goods
+        this.goodsList = [...this.goodsList, ...data.goods]
+        // 判断数组的长度是否等于返回的total
+        if (this.goodsList.length === data.total) {
+          this.isGoodsList = true
+        }
+      }).finally(() => {
+        // 不管promise的状态 都会执行
+        this.isRequest = false
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less">
@@ -56,6 +129,9 @@ nav {
   align-items: center;
   height: 100rpx;
   border: 1rpx solid #dddddd;
+  .active {
+    color: #eb4450;
+  }
 }
 .showBox {
   display: flex;
@@ -83,5 +159,9 @@ nav {
       }
     }
   }
+}
+.tipText {
+  color: #666;
+  text-align: center;
 }
 </style>
