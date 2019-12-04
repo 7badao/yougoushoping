@@ -6,6 +6,7 @@ export default {
 </script>
 
 <style>
+@import url("../src/css/inconfont.css");
 page {
   color: #333;
 }

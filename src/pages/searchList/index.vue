@@ -18,7 +18,13 @@
     </div>
     <!-- 商品展示区域 -->
     <div class="bigShowBox" :style="{marginTop:isFixed?'220rpx':'0'}">
-      <div class="showBox" v-for="(item,index) in goodsList" :key="index">
+      <!-- 点击商品跳转到商品详情 -->
+      <div
+        class="showBox"
+        @click="toItem(item.goods_id)"
+        v-for="(item,index) in goodsList"
+        :key="index"
+      >
         <div class="left">
           <img :src="item.goods_small_logo" alt />
         </div>
@@ -46,11 +52,8 @@ export default {
       goodsList: [],
       // 搜索的关键字
       query: '',
-      pagenum: 1,
       // 选中字的下标
       artiveIndex: 0,
-      // 设置一个标志位 判断是否是在请求中 默认不在
-      isRequest: false,
       // 判断数据是否加载完毕
       isGoodsList: false,
       // 判断是否需要固定定位 当下拉刷新的时候才需要
@@ -60,6 +63,11 @@ export default {
   // 页面加载时触发 获取页面的路径参数
   onLoad (options) {
     // this.reload()
+    this.pagenum = 1
+    // 设置一个标志位 判断是否是在请求中 默认不在
+    this.isRequest = false
+    // 清空里面的数据
+    this.goodsList = []
     this.query = options.query
     this.getSearch()
     // console.log(options.query)
@@ -81,6 +89,8 @@ export default {
   methods: {
     reload () {
       this.pagenum = 1
+      this.isRequest = false
+      this.isGoodsList = false
       // 将数组里面的数据清空
       this.goodsList = []
       this.getSearch()
@@ -112,6 +122,11 @@ export default {
         // 不管promise的状态 都会执行
         this.isRequest = false
       })
+    },
+    // 跳转到商品详情
+    toItem (index) {
+      // console.log(index)
+      wx.navigateTo({ url: '/pages/item/main?id=' + index })
     }
   }
 }

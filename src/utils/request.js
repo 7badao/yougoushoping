@@ -1,4 +1,4 @@
-const BASE_URL = 'https://www.uinav.com'
+const BASE_URL = 'https://ugo.botue.com'
 
 function request (options) {
   // 判断是否需要加载

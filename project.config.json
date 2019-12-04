@@ -58,7 +58,7 @@
 					"id": 1,
 					"name": "pages/item/main",
 					"pathName": "pages/item/main",
-					"query": "",
+					"query": "id=542",
 					"scene": null
 				}
 			]
