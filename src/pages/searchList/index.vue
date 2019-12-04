@@ -1,30 +1,34 @@
 <template>
   <div>
     <!-- 头部搜索框 -->
-    <header>
-      <icon type="search" size="24"></icon>
-      <input type="text" v-model="query" @confirm="reload" confirm-type="search" />
-    </header>
-    <!-- 导航栏 -->
-    <nav>
-      <div
-        :class="{active:artiveIndex===index}"
-        @click="artiveIndex=index"
-        v-for="(item, index) in menuList"
-        :key="index"
-      >{{item}}</div>
-    </nav>
+    <div class="topHeader" :style="{position:isFixed?'fixed':'static'}">
+      <header>
+        <icon type="search" size="24"></icon>
+        <input type="text" v-model="query" @confirm="reload" confirm-type="search" />
+      </header>
+      <!-- 导航栏 -->
+      <nav>
+        <div
+          :class="{active:artiveIndex===index}"
+          @click="artiveIndex=index"
+          v-for="(item, index) in menuList"
+          :key="index"
+        >{{item}}</div>
+      </nav>
+    </div>
     <!-- 商品展示区域 -->
-    <div class="showBox" v-for="(item,index) in goodsList" :key="index">
-      <div class="left">
-        <img :src="item.goods_small_logo" alt />
-      </div>
-      <div class="right">
-        <div class="lineHiden">{{item.goods_name}}</div>
-        <span class="price">
-          ￥
-          <span class="num">{{item.goods_price}}</span>.00
-        </span>
+    <div class="bigShowBox" :style="{marginTop:isFixed?'220rpx':'0'}">
+      <div class="showBox" v-for="(item,index) in goodsList" :key="index">
+        <div class="left">
+          <img :src="item.goods_small_logo" alt />
+        </div>
+        <div class="right">
+          <div class="lineHiden">{{item.goods_name}}</div>
+          <span class="price">
+            ￥
+            <span class="num">{{item.goods_price}}</span>.00
+          </span>
+        </div>
       </div>
     </div>
     <div class="tipText" v-show="isGoodsList">我是有底线的</div>
@@ -48,17 +52,25 @@ export default {
       // 设置一个标志位 判断是否是在请求中 默认不在
       isRequest: false,
       // 判断数据是否加载完毕
-      isGoodsList: false
+      isGoodsList: false,
+      // 判断是否需要固定定位 当下拉刷新的时候才需要
+      isFixed: false
     }
   },
   // 页面加载时触发 获取页面的路径参数
   onLoad (options) {
+    // this.reload()
     this.query = options.query
     this.getSearch()
     // console.log(options.query)
   },
+  onPageScroll () {
+    this.isFixed = true
+  },
   // 下拉刷新 加载第一页
   onPullDownRefresh () {
+    this.isFixed = false
+    this.isPullDownRefresh = true
     this.reload()
   },
   // 上拉加载更多
@@ -106,11 +118,18 @@ export default {
 </script>
 
 <style lang="less">
+.topHeader {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+}
 header {
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 120rpx;
+  width: 100%;
   background-color: #eee;
   padding: 0 16rpx;
   icon {
@@ -133,33 +152,37 @@ nav {
     color: #eb4450;
   }
 }
-.showBox {
-  display: flex;
-  height: 260rpx;
-  padding: 30rpx 20rpx;
-  border-bottom: 1rpx solid #ddd;
-  box-sizing: border-box;
-  .left {
-    img {
-      width: 200rpx;
-      height: 200rpx;
+.bigShowBox {
+  margin-top: 220rpx;
+  .showBox {
+    display: flex;
+    height: 260rpx;
+    padding: 30rpx 20rpx;
+    border-bottom: 1rpx solid #ddd;
+    box-sizing: border-box;
+    .left {
+      img {
+        width: 200rpx;
+        height: 200rpx;
+      }
     }
-  }
-  .right {
-    flex: 1;
-    margin-left: 27rpx;
-    font-size: 28rpx;
-    .lineHiden {
-      margin-bottom: 70rpx;
-    }
-    .price {
-      color: #eb4450;
-      .num {
-        font-size: 34rpx;
+    .right {
+      flex: 1;
+      margin-left: 27rpx;
+      font-size: 28rpx;
+      .lineHiden {
+        margin-bottom: 70rpx;
+      }
+      .price {
+        color: #eb4450;
+        .num {
+          font-size: 34rpx;
+        }
       }
     }
   }
 }
+
 .tipText {
   color: #666;
   text-align: center;

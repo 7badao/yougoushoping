@@ -53,6 +53,13 @@
 					"pathName": "pages/searchList/main",
 					"query": "query=小米",
 					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "pages/item/main",
+					"pathName": "pages/item/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
