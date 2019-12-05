@@ -2,10 +2,11 @@
   <div>
     <!-- 头部搜索框 -->
     <div class="topHeader" :style="{position:isFixed?'fixed':'static'}">
-      <header>
+      <!-- <header>
         <icon type="search" size="24"></icon>
         <input type="text" v-model="query" @confirm="reload" confirm-type="search" />
-      </header>
+      </header>-->
+      <searchBar v-model="query" confirm-type="search" />
       <!-- 导航栏 -->
       <nav>
         <div
@@ -42,6 +43,8 @@
 </template>
 
 <script>
+// 导入封装的搜索组件
+import searchBar from '../../components/searchBar'
 const PAGE_SIZE = 6
 export default {
   data () {
@@ -59,6 +62,9 @@ export default {
       // 判断是否需要固定定位 当下拉刷新的时候才需要
       isFixed: false
     }
+  },
+  components: {
+    searchBar
   },
   // 页面加载时触发 获取页面的路径参数
   onLoad (options) {
