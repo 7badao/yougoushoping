@@ -1,6 +1,6 @@
 <template>
   <!-- 头部搜索框 -->
-  <div class="header">
+  <div class="header" @click="toSearch">
     <div class="inputBox">
       <icon type="search" size="20"></icon>
       <span>搜索</span>
@@ -10,7 +10,11 @@
 
 <script>
 export default {
-
+  methods: {
+    toSearch () {
+      wx.navigateTo({ url: '/pages/search/main' })
+    }
+  }
 }
 </script>
 

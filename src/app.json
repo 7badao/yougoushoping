@@ -5,7 +5,8 @@
     "pages/category/main",
     "pages/me/main",
     "pages/searchList/main",
-    "pages/item/main"
+    "pages/item/main",
+    "pages/search/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -16,7 +17,8 @@
   "tabBar": {
     "selectedColor": "#eb4450",
     "color": "#333",
-    "list": [{
+    "list": [
+      {
         "pagePath": "pages/home/main",
         "iconPath": "/static/tabs/icons/icon_home@3x.png",
         "selectedIconPath": "/static/tabs/icons/icon_home_active@3x.png",

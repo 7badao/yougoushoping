@@ -6,7 +6,8 @@
         <icon type="search" size="24"></icon>
         <input type="text" v-model="query" @confirm="reload" confirm-type="search" />
       </header>-->
-      <searchBar v-model="query" confirm-type="search" />
+      <!-- 接收传过来的confrim 向子组件传当前的关键字 -->
+      <searchBar confirm-type="search" @confirm="searchGoods" :query="query" />
       <!-- 导航栏 -->
       <nav>
         <div
@@ -128,6 +129,13 @@ export default {
         // 不管promise的状态 都会执行
         this.isRequest = false
       })
+    },
+    // 搜索商品
+    searchGoods (data) {
+      // console.log(data)
+      this.reload()
+      // 将搜索框的数据赋值给关键字
+      this.query = data
     },
     // 跳转到商品详情
     toItem (index) {
