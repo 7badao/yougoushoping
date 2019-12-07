@@ -6,19 +6,19 @@
     </div>
     <!-- 商品列表 -->
     <ul class="goods-list">
-      <li class="goods-item">
+      <li class="goods-item" v-for="item in goodsList" :key="item.goods_id">
         <span class="iconfont icon-check"></span>
-        <img src="https://api.zbztb.cn/full/2fb113b32f7a2b161f5ee4096c319afedc3fd5a1.jpg" alt />
+        <img :src="item.goods_small_logo" alt />
         <div class="right">
-          <p class="line-clamp2">xx</p>
+          <p class="lineHiden">{{item.goods_name}}</p>
           <div class="btm">
             <span class="price">
               ￥
-              <span>100</span>.00
+              <span>{{item.goods_price}}</span>.00
             </span>
             <div class="goods-num">
               <button>-</button>
-              <span>10</span>
+              <span>{{cart[item.goods_id].num}}</span>
               <button>+</button>
             </div>
           </div>
@@ -27,7 +27,7 @@
     </ul>
     <div class="account">
       <div class="select-all">
-        <span class="iconfont icon-check"></span>
+        <span class="iconfont icon-uncheck"></span>
         <span>全选</span>
       </div>
 
@@ -42,7 +42,31 @@
     </div>
   </div>
 </template>
-
+<script>
+export default {
+  data () {
+    return {
+      cart: {},
+      goodsList: []
+    }
+  },
+  // 取出本地数据
+  onShow () {
+    this.cart = wx.getStorageSync('cart')
+    this.getGoodslist()
+  },
+  methods: {
+    getGoodslist () {
+      this.$request({
+        url: '/api/public/v1/goods/goodslist?goods_ids=' + Object.keys(this.cart)
+      }).then(data => {
+        console.log(data)
+        this.goodsList = data
+      })
+    }
+  }
+}
+</script>
 
 <style lang="less">
 .title {
