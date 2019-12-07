@@ -7,7 +7,11 @@
     <!-- 商品列表 -->
     <ul class="goods-list">
       <li class="goods-item" v-for="item in goodsList" :key="item.goods_id">
-        <span class="iconfont icon-check"></span>
+        <span
+          class="iconfont"
+          :class="item.checked?'icon-check':'icon-uncheck'"
+          @click="item.checked=!item.checked"
+        ></span>
         <img :src="item.goods_small_logo" alt />
         <div class="right">
           <p class="lineHiden">{{item.goods_name}}</p>
@@ -17,9 +21,10 @@
               <span>{{item.goods_price}}</span>.00
             </span>
             <div class="goods-num">
-              <button>-</button>
-              <span>{{cart[item.goods_id].num}}</span>
-              <button>+</button>
+              <button @click="item.num--">-</button>
+              <!-- 使用cart的数据源 -->
+              <span>{{item.num}}</span>
+              <button @click="item.num++">+</button>
             </div>
           </div>
         </div>
@@ -27,7 +32,7 @@
     </ul>
     <div class="account">
       <div class="select-all">
-        <span class="iconfont icon-uncheck"></span>
+        <span class="iconfont" @click="isAll=!isAll" :class="isAll?'icon-check':'icon-uncheck'"></span>
         <span>全选</span>
       </div>
 
@@ -46,23 +51,59 @@
 export default {
   data () {
     return {
-      cart: {},
       goodsList: []
     }
   },
   // 取出本地数据
   onShow () {
-    this.cart = wx.getStorageSync('cart')
     this.getGoodslist()
   },
   methods: {
+    // 获取商品数据
     getGoodslist () {
+      let cart = wx.getStorageSync('cart')
       this.$request({
-        url: '/api/public/v1/goods/goodslist?goods_ids=' + Object.keys(this.cart)
+        url: '/api/public/v1/goods/goodslist?goods_ids=' + Object.keys(cart)
       }).then(data => {
         console.log(data)
+        // 将购物车的数据与goodsList的数据融合
+        data.forEach(v => {
+          v.num = cart[v.goods_id].num
+          v.checked = cart[v.goods_id].checked
+        })
         this.goodsList = data
       })
+    }
+  },
+  computed: {
+    // 全选全不选
+    isAll: {
+      // eslint-disable-next-line no-unused-vars
+      // let isAllBtn = true
+      // this.goodsList.forEach(v => {
+      //   if (!v.checked) {
+      //     isAllBtn = false
+      //   }
+      // })
+      // return isAllBtn
+      // for (let item of this.goodsList) {
+      //   if (!item.checked) {
+      //     isAllBtn = false
+      //     break
+      //   }
+      // }
+      // return isAllBtn
+      get () {
+        return this.goodsList.every(v => {
+          return v.checked
+        })
+      },
+      set (statues) {
+        // console.log(statues)
+        this.goodsList.forEach(v => {
+          v.checked = statues
+        })
+      }
     }
   }
 }
