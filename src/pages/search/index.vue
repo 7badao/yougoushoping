@@ -39,7 +39,7 @@ export default {
       })
       // 在数组的头部添加
       newKeyWord.unshift(data)
-      // 取出本地数据
+      // 存入本地数据
       wx.setStorageSync(KEY_WORD, newKeyWord)
       wx.navigateTo({ url: '/pages/searchList/main?query=' + data })
     },
@@ -55,7 +55,7 @@ export default {
         confirmColor: '#3CC51F', // 确定按钮的文字颜色,
         success: res => {
           if (res.confirm) {
-            wx.removeStorageSync({ key: KEY_WORD })
+            wx.removeStorageSync(KEY_WORD)
             // 清空列表内容
             this.keywordList = []
           }

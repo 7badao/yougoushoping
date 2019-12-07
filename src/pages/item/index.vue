@@ -62,9 +62,9 @@
       </div>
       <div class="icon-text">
         <span class="iconfont icon-gouwuchekong"></span>
-        <span>购物车</span>
+        <span @click="toCart">购物车</span>
       </div>
-      <div class="btn add-cart-btn">加入购物车</div>
+      <div class="btn add-cart-btn" @click="addCart()">加入购物车</div>
       <div class="btn buy-btn">立即购买</div>
     </div>
   </div>
@@ -110,6 +110,47 @@ export default {
         console.log(data)
         this.goodsList = data
       })
+    },
+    // 跳转到购物车页面
+    toCart () {
+      wx.switchTab({ url: '/pages/cart/main' })
+    },
+    // 新增商品到购物车
+    addCart () {
+      // 取出本地数据判断是否有该商品数据
+      let cart = wx.getStorageSync('cart') || {}
+      let goodsId = this.goodsList.goods_id
+      // let item = cart.find(v => {
+      //   return v.goodsId === goodsId
+      // })
+      // // 如果商品不存在,将商品添加到本地数据中
+      // if (!item) {
+      //   cart.push({
+      //     goodsId: goodsId,
+      //     num: 1,
+      //     checked: true
+      //   })
+      // } else {
+      //   // 第二次添加
+      //   item.num++
+      // }
+      // if (!cart[goodsId]) {
+      //   cart[goodsId] = {
+      //     num: 1,
+      //     checked: true
+      //   }
+      // } else {
+      //   cart[goodsId] = {
+      //     num: ++cart[goodsId].num,
+      //     checked: true
+      //   }
+      // }
+      cart[goodsId] = {
+        num: cart[goodsId] ? ++cart[goodsId].num : 1,
+        checked: true
+      }
+      // 存入本地数据
+      wx.setStorageSync('cart', cart)
     }
   }
 }
